@@ -1,5 +1,6 @@
 {
-  "version": 1,
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
   "regions": ["sin1"],
   "functions": {
     "api/firms.js": {
