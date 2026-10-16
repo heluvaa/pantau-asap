@@ -104,16 +104,26 @@
     scheduleNews();
   }
 
-  /* ---------------- berita: ambil max 1x per refresh cycle, hormati throttle GDELT ---------------- */
+  /* ---------------- berita: satu siklus dengan data titik api (±60 menit) ----------------
+     Proxy /api/news sudah cache server-side 60 mnt; guard di sini mencegah
+     fetch berlebih saat user sering toggle filter (loadAll dipanggil ulang). */
   async function scheduleNews() {
     if (state.newsBusy) return;
-    if (Date.now() - (state.newsAt || 0) < 4 * 60 * 1000) return; // hemat throttle publik GDELT
+    const NEWS_MS = Math.max(5, Number(cfg().REFRESH_MINUTES) || 60) * 60 * 1000;
+    if (state.newsAt && Date.now() - state.newsAt < NEWS_MS) return;
     state.newsBusy = true;
     state.newsAt = Date.now();
     try { await PA.renderNews(); }
-    catch (e) { /* renderNews sudah menangani fallback internal */ }
+    catch (e) { /* renderNews menangani kegagalan secara internal (pesan jujur) */ }
     finally { state.newsBusy = false; }
   }
+  PA.retryNews = async function () {
+    if (state.newsBusy) return;
+    state.newsBusy = true;
+    state.newsAt = Date.now();
+    try { await PA.renderNews({ force: true }); }
+    finally { state.newsBusy = false; }
+  };
 
   /* ---------------- auto refresh ---------------- */
   function setupTimer() {

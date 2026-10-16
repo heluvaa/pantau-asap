@@ -39,31 +39,44 @@
 
 <div id="banners" class="banners" aria-live="assertive"></div>
 
-<div class="filterbar" role="search" aria-label="Filter data titik api">
-  <div class="filter-group" role="radiogroup" aria-label="Rentang waktu">
-    <span class="filter-label">Rentang</span>
-    <button class="chip-btn" type="button" data-range="24h" role="radio" aria-checked="false">24 jam</button>
-    <button class="chip-btn is-active" type="button" data-range="48h" role="radio" aria-checked="true">48 jam</button>
-    <button class="chip-btn" type="button" data-range="7d" role="radio" aria-checked="false">7 hari</button>
-  </div>
-  <div class="filter-group" role="group" aria-label="Sumber satelit">
-    <span class="filter-label">Satelit</span>
-    <button class="chip-btn is-active" type="button" data-source="VIIRS_SNPP_NRT" role="checkbox" aria-checked="true">VIIRS Suomi-NPP</button>
-    <button class="chip-btn is-active" type="button" data-source="VIIRS_NOAA20_NRT" role="checkbox" aria-checked="true">VIIRS NOAA-20</button>
-    <button class="chip-btn is-active" type="button" data-source="MODIS_NRT" role="checkbox" aria-checked="true">MODIS</button>
-  </div>
-  <div class="filter-group" role="group" aria-label="Tingkat confidence minimum">
-    <span class="filter-label">Confidence min.</span>
-    <select id="sel-confidence" class="select" aria-label="Confidence minimum">
-      <option value="0" selected>Semua</option>
-      <option value="1">Sedang + tinggi</option>
-      <option value="2">Tinggi saja</option>
-    </select>
-  </div>
-  <p class="filter-note">Deteksi satelit ± 3 jam setelah lewat di atas wilayah; jumlah titik bisa bertambah saat data terbaru masuk.</p>
-</div>
-
 <main id="main" class="layout">
+  <section class="card kpi-card" aria-label="Ringkasan statistik">
+    <div class="card-head"><h2>Ringkasan</h2></div>
+    <div class="kpis">
+      <div class="kpi"><span class="kpi-num" id="kpi-total">—</span><span class="kpi-label">Titik api</span></div>
+      <div class="kpi"><span class="kpi-num" id="kpi-high">—</span><span class="kpi-label">Confidence tinggi</span></div>
+      <div class="kpi"><span class="kpi-num" id="kpi-prov">—</span><span class="kpi-label">Provinsi terdampak</span></div>
+      <div class="kpi"><span class="kpi-num" id="kpi-area">—</span><span class="kpi-label">Est. luas (km²)*</span></div>
+    </div>
+    <p class="disclaimer" id="area-disclaimer">*Luas terdampak adalah <strong>estimasi kasar</strong>: FIRMS hanya memberi titik deteksi satelit, bukan batas area terbakar. Estimasi memakai model sebaran panas per titik (FRP). Jangan gunakan untuk angka resmi.</p>
+  </section>
+
+  <div class="filterbar" role="search" aria-label="Filter data titik api">
+    <div class="filter-scroller">
+      <div class="filter-group" role="radiogroup" aria-label="Rentang waktu">
+        <span class="filter-label">Rentang</span>
+        <button class="chip-btn" type="button" data-range="24h" role="radio" aria-checked="false">24 jam</button>
+        <button class="chip-btn is-active" type="button" data-range="48h" role="radio" aria-checked="true">48 jam</button>
+        <button class="chip-btn" type="button" data-range="7d" role="radio" aria-checked="false">7 hari</button>
+      </div>
+      <div class="filter-group" role="group" aria-label="Sumber satelit">
+        <span class="filter-label">Satelit</span>
+        <button class="chip-btn is-active" type="button" data-source="VIIRS_SNPP_NRT" role="checkbox" aria-checked="true">VIIRS Suomi-NPP</button>
+        <button class="chip-btn is-active" type="button" data-source="VIIRS_NOAA20_NRT" role="checkbox" aria-checked="true">VIIRS NOAA-20</button>
+        <button class="chip-btn is-active" type="button" data-source="MODIS_NRT" role="checkbox" aria-checked="true">MODIS</button>
+      </div>
+      <div class="filter-group" role="group" aria-label="Tingkat confidence minimum">
+        <span class="filter-label">Confidence min.</span>
+        <select id="sel-confidence" class="select" aria-label="Confidence minimum">
+          <option value="0" selected>Semua</option>
+          <option value="1">Sedang + tinggi</option>
+          <option value="2">Tinggi saja</option>
+        </select>
+      </div>
+    </div>
+    <p class="filter-note">Deteksi satelit ± 3 jam setelah lewat di atas wilayah; jumlah titik bisa bertambah saat data terbaru masuk.</p>
+  </div>
+
   <section class="map-card" aria-label="Peta titik api">
     <div class="card-head">
       <h2>Peta Titik Api</h2>
@@ -83,17 +96,6 @@
   </section>
 
   <aside class="side">
-    <section class="card" aria-label="Ringkasan statistik">
-      <div class="card-head"><h2>Ringkasan</h2></div>
-      <div class="kpis">
-        <div class="kpi"><span class="kpi-num" id="kpi-total">—</span><span class="kpi-label">Titik api</span></div>
-        <div class="kpi"><span class="kpi-num" id="kpi-high">—</span><span class="kpi-label">Confidence tinggi</span></div>
-        <div class="kpi"><span class="kpi-num" id="kpi-prov">—</span><span class="kpi-label">Provinsi terdampak</span></div>
-        <div class="kpi"><span class="kpi-num" id="kpi-area">—</span><span class="kpi-label">Est. luas (km²)*</span></div>
-      </div>
-      <p class="disclaimer" id="area-disclaimer">*Luas terdampak adalah <strong>estimasi kasar</strong>: FIRMS hanya memberi titik deteksi satelit, bukan batas area terbakar. Estimasi memakai model sebaran panas per titik (FRP). Jangan gunakan untuk angka resmi.</p>
-    </section>
-
     <section class="card" aria-label="Titik api per provinsi">
       <div class="card-head">
         <h2>Per Provinsi</h2>
@@ -110,10 +112,11 @@
       <div id="trend" class="trend" role="img"></div>
     </section>
 
-    <section class="card" aria-label="Berita kebakaran hutan terkini">
+    <section class="card news-card" aria-label="Berita kebakaran hutan terkini">
       <div class="card-head">
         <h2>Berita Terkini</h2>
-        <p class="card-hint">Sumber: agregator berita (GDELT / Google News).</p>
+        <p class="card-hint" id="news-updated">Memuat berita…</p>
+        <p class="card-hint">Sumber: Google News (feed RSS resmi), diambil server-side — artikel asli, bukan demo.</p>
       </div>
       <div id="news-list" class="news-list" aria-live="polite"></div>
     </section>
@@ -122,7 +125,8 @@
 
 <footer class="footer" role="contentinfo">
   <p>Data titik api: <a href="https://firms.modaps.eosdis.nasa.gov/" rel="noopener" target="_blank">NASA FIRMS</a> (satelit VIIRS Suomi-NPP, VIIRS NOAA-20, MODIS Terra/Aqua, pemrosesan Near Real-Time).</p>
-  <p>Peta dasar © <a href="https://carto.com/attributions" rel="noopener" target="_blank">CARTO</a> · data geospasial © <a href="https://www.openstreetmap.org/copyright" rel="noopener" target="_blank">OpenStreetMap</a> kontributor · batas provinsi <a href="https://www.geoboundaries.org" rel="noopener" target="_blank">geoBoundaries</a> (ODbL).</p>
+  <p>Peta dasar © <a href="https://www.openstreetmap.org/copyright" rel="noopener" target="_blank">OpenStreetMap</a> kontributor · batas provinsi <a href="https://www.geoboundaries.org" rel="noopener" target="_blank">geoBoundaries</a> (ODbL).</p>
+  <p>Berita: <a href="https://news.google.com/rss/search?q=%22kebakaran%20hutan%22&hl=id&gl=ID&ceid=ID:id" rel="noopener" target="_blank">Google News RSS</a> (tautan ke penerbit masing-masing).</p>
   <p>Informasi ini untuk pemantauan mandiri — bukan sumber resmi penanggulangan bencana. Untuk kondisi darurat hubungi BPBD / 112. PantauAsap © <span id="year"></span>.</p>
 </footer>
 

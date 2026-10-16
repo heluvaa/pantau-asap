@@ -6,6 +6,10 @@
     "api/firms.js": {
       "memory": 1024,
       "maxDuration": 30
+    },
+    "api/news.js": {
+      "memory": 128,
+      "maxDuration": 15
     }
   },
   "headers": [

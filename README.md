@@ -6,10 +6,10 @@ Dashboard pemantauan **titik api kebakaran hutan & lahan Indonesia** — live da
 
 ## Fitur
 
-- **Peta** Indonesia (tile CARTO dark, atribusi OpenStreetMap) dengan cluster marker. Warna = confidence (kuning rendah / oranye sedang / merah tinggi), ukuran = FRP (kekuatan panas, MW). Klik cluster untuk zoom, klik titik untuk detail: koordinat, waktu deteksi WIB, FRP, suhu kanal, satelit, provinsi.
+- **Peta** Indonesia (tile OpenStreetMap standar, atribusi OpenStreetMap) dengan cluster marker. Warna = confidence (kuning rendah / oranye sedang / merah tinggi), ukuran = FRP (kekuatan panas, MW). Klik cluster untuk zoom, klik titik untuk detail: koordinat, waktu deteksi WIB, FRP, suhu kanal, satelit, provinsi.
 - **Filter:** rentang waktu (24 jam / 48 jam / 7 hari), sumber satelit (3 toggle), confidence minimum.
 - **Statistik:** total titik, confidence tinggi, provinsi terdampak (point-in-polygon, Kalimantan & Papua disorot), tren harian, dan **estimasi luas terdampak** dengan disclaimer eksplisit (FIRMS hanya memberi titik, bukan luas).
-- **Berita terkini:** GNews.io (bila key diisi) → GDELT DOC 2.0 (tanpa key) → Google News RSS via proxy → link pencarian.
+- **Berita terkini:** Google News RSS (hl=id) via proxy server-side `/api/news` — artikel 100% asli, tanpa API key, tanpa data demo. Satu siklus refresh dengan titik api (60 mnt) + timestamp "Berita diperbarui: [jam] WIB". Semua gagal → pesan jujur "Berita tidak dapat dimuat" + tombol coba lagi.
 - **Fallback berlapis:** live → cache IndexedDB → dataset demo (snapshot FIRMS tereduksi, dilabel jelas).
 - **Auto-refresh 60 menit** + tombol Perbarui + timestamp "data terakhir diperbarui" (WIB). Semua timestamp dalam WIB (Asia/Jakarta).
 
@@ -27,7 +27,7 @@ cp config.example.js config.js
 | `FIRMS_MODE` | `'auto'` | `auto` (proxy dulu, fallback direct) / `proxy` / `direct` |
 | `FIRMS_PROXY_ENDPOINT` | `''` | Endpoint proxy (default `/api/firms`) |
 | `REFRESH_MINUTES` | `60` | Interval auto-refresh |
-| `GNEWS_API_KEY` | `''` | Opsional: GNews.io untuk berita |
+| — | | Berita tanpa konfigurasi: proxy server-side `/api/news` (Google News RSS, tanpa key) |
 | `SOURCES` | `[...]` | Sumber satelit yang diambil |
 | `BBOX` | `[105,-11,141,6]` | Area operasi (west,south,east,north) |
 | `DEMO_MODE` | `true` | Tampilkan snapshot demo bila live gagal |
@@ -86,7 +86,7 @@ python3 -m http.server 8765
 │   ├── geo.js          # point-in-polygon provinsi + estimasi luas
 │   ├── map.js          # Leaflet + Supercluster
 │   ├── stats.js        # KPI, provinsi, tren harian
-│   ├── news.js         # GNews/GDELT/RSS + fallback link
+│   ├── news.js         # render berita dari /api/news (asli, tanpa demo)
 │   └── app.js          # orkestrasi, filter, auto-refresh
 ├── api/firms.js        # Vercel serverless proxy (key di env)
 ├── data/provinsi-id.json   # batas provinsi (geoBoundaries, simplified)
@@ -99,7 +99,7 @@ python3 -m http.server 8765
 
 - Data titik api: [NASA FIRMS](https://firms.modaps.eosdis.nasa.gov/) (NRT VIIRS/MODIS).
 - Batas provinsi: [geoBoundaries](https://www.geoboundaries.org) (ODbL 1.0) — sumber OpenStreetMap/Wambacher.
-- Peta dasar: © [CARTO](https://carto.com/attributions), data © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors.
-- Berita: GDELT Project / GNews.io / Google News (tautan ke penerbit masing-masing).
+- Peta dasar: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors.
+- Berita: Google News RSS (hl=id, query "kebakaran hutan" / "karhutla") via proxy server-side; tautan ke penerbit masing-masing.
 
 Bukan alat resmi penanggulangan bencana. Kondisi darurat: hubungi BPBD / 112.

@@ -12,14 +12,14 @@
 - Filter bar di atas: Rentang 24h/48h/7d · Satelit (3 toggle) · Confidence min (select).
 
 ## Constraints & decisions (verified, not assumed)
-- Stack: HTML + CSS + JS murni, tanpa framework, tanpa build step. Leaflet 1.9.4 (CDN pinned + SRI), supercluster 8.0.1 (canvas clustering). Tile: CARTO dark_all (gratis, tanpa key, attribution wajib).
+- Stack: HTML + CSS + JS murni, tanpa framework, tanpa build step. Leaflet 1.9.4 (CDN pinned + SRI), supercluster 8.0.1 (canvas clustering). Tile: OpenStreetMap standar (gratis, tanpa key, attribution wajib).
 - FIRMS `/api/country/` TIDAK tersedia → pakai `/api/area/csv/{KEY}/{SOURCE}/{BBOX}/{DAY_RANGE}` (BBOX Indonesia), DAY_RANGE maks 5 → rentang 7 hari = 2 request + dedupe.
 - Confidence dinormalisasi ke 0/1/2 (VIIRS `n/l/h`; MODIS 0–100; ambang MODIS: <50/50–80/>80).
 - Warna marker = confidence (rendah #EAB308 / sedang #F97316 / tinggi #EF4444) — karena 93% titik VIIRS ber-confidence `n`, jadi ukuran circle = FRP. Teks label ikut membedakan (color-not-only).
 - MAP_KEY: konfigurabel di `config.js` (tidak di-commit). Produksi = Vercel serverless proxy `api/firms.js` dengan key di env `FIRMS_MAP_KEY`; local/Pages = direct mode.
 - Fallback berjenjang: live → cache IndexedDB (`pa_hotspots_v1`) → dataset demo (snapshot FIRMS tereduksi, dilabeli jelas "DATA DEMO").
 - Statistik provinsi: point-in-polygon atas GeoJSON geoBoundaries ADM1 (ODbL, 34 prov; 5 provinsi pemekaran 2022 tanpa batas → masuk bucket "Provinsi baru (batas belum tersedia)" via fallback wilayah), estimasi luas = model per-titik `km² ≈ 0.09 × FRP` dengan disclaimer ESTIMASI.
-- Berita: GDELT DOC 2.0 (tanpa key, CORS OK, throttling 5 s) atau GNews.io bila `GNEWS_API_KEY` diisi; failure → kartu link pencarian Google News.
+- Berita: Google News RSS via proxy server-side /api/news (tanpa key, artikel 100% asli; failure → pesan jujur + tombol coba lagi. DILARANG data demo/dummy).
 - Bahasa Indonesia; semua timestamp WIB (Asia/Jakarta, `Intl`); auto-refresh 60 menit + tombol "Perbarui" + teks "Data terakhir diperbarui".
 - Dark theme default; tidak ada light-mode toggle (YAGNI).
 

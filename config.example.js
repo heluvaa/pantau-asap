@@ -15,17 +15,14 @@ window.PANTAU_CONFIG = {
   // Endpoint proxy. Kosong = '/api/firms' (Vercel serverless function).
   FIRMS_PROXY_ENDPOINT: '',
 
-  // Interval auto-refresh data titik api (menit).
+  // Interval auto-refresh data titik api (menit). Berita memakai siklus yang sama.
   REFRESH_MINUTES: 60,
 
-  // API berita. D supporting dua bentuk:
-  //  1. GDELT DOC 2.0 — tanpa key (kosongkan GNEWS_API_KEY).
-  //  2. GNews.io — daftar gratis di https://gnews.io, isi key di sini.
-  GNEWS_API_KEY: '',
-  GNEWS_ENDPOINT: 'https://gnews.io/api/v4/search',
-  GDELT_ENDPOINT: 'https://api.gdeltproject.org/api/v2/doc/doc',
-  NEWS_QUERY: 'kebakaran hutan',
-  NEWS_LINK_FALLBACK: 'https://news.google.com/rss/search?q=%22kebakaran+hutan%22+indonesia&hl=id&gl=ID&ceid=ID:id',
+  // Berita: 100% asli & realtime dari Google News RSS lewat proxy server-side
+  // /api/news (lihat api/news.js). TANPA API key, TANPA data demo/placeholder.
+  // Tidak ada konfigurasi yang diperlukan di sini.
+  // (Opsional) GNews.io hanya bila Anda mau memakainya: key HARUS di env
+  // Vercel dan diproxy server-side — jangan taruh key di file client ini.
 
   // Sumber satelit yang diambil (FIRMS source id).
   SOURCES: ['VIIRS_SNPP_NRT', 'VIIRS_NOAA20_NRT', 'MODIS_NRT'],

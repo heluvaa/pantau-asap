@@ -59,9 +59,11 @@
         maxBounds: [[-16, 88], [14, 152]], maxBoundsViscosity: 0.7,
         zoomControl: true, worldCopyJump: false
       });
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        subdomains: 'abcd', maxZoom: 12,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a> · data titik api: <a href="https://firms.modaps.eosdis.nasa.gov/" target="_blank" rel="noopener">NASA FIRMS</a>'
+      // OSM standard tile — tanpa API key, tanpa watermark. (CARTO basemaps
+      // sejak 2026 mengembalikan placeholder "API KEY REQUIRED" tanpa key.)
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · data titik api: <a href="https://firms.modaps.eosdis.nasa.gov/" target="_blank" rel="noopener">NASA FIRMS</a>'
       }).addTo(map);
 
       layers.cluster = L.layerGroup().addTo(map);

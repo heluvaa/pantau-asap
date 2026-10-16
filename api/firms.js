@@ -7,7 +7,6 @@
  *   GET /api/firms?probe=1                          -> { ok, mode }
  *   GET /api/firms?source=&bbox=&day_range[=&date=] -> text/csv (data hotspot)
  *   GET /api/firms?endpoint=data_availability       -> text/csv
- *   GET /api/firms?endpoint=news_rss&q=...          -> application/rss+xml
  *
  * Cache: in-memory per instance + header edge cache (60 menit) — data FIRMS
  * sendiri hanya diperbarui ±3 jam, jadi lebih dari itu percuma.
@@ -63,19 +62,9 @@ export default async function handler(req, res) {
     return send(res, 500, 'application/json; charset=utf-8',
       { error: 'FIRMS_MAP_KEY belum diset pada environment Vercel.' }, false);
   }
+
   if (req.method !== 'GET') {
     return send(res, 405, 'text/plain; charset=utf-8', 'Method not allowed', false);
-  }
-
-  // ---- Google News RSS (fallback berita; browser tidak bisa fetch RSS cross-origin) ----
-  if (req.query.endpoint === 'news_rss') {
-    const q = String(req.query.q || 'kebakaran hutan indonesia').slice(0, 120);
-    try {
-      const r = await fetchExternal(`https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=id&gl=ID&ceid=ID:id`);
-      return send(res, 200, 'application/rss+xml; charset=utf-8', r, true);
-    } catch (e) {
-      return send(res, 502, 'text/plain; charset=utf-8', 'news upstream gagal: ' + e.message, false);
-    }
   }
 
   // ---- cache lookup ----
@@ -120,10 +109,4 @@ export default async function handler(req, res) {
   } catch (e) {
     return send(res, 504, 'text/plain; charset=utf-8', 'Upstream FIRMS tidak terjangkau: ' + e.message, false);
   }
-}
-
-async function fetchExternal(url) {
-  const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; PantauAsap/1.0)' } });
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  return res.text();
 }
