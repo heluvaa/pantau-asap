@@ -1,6 +1,0 @@
-config.js
-.vercel
-.env*
-node_modules/
-*.log
-.DS_Store
